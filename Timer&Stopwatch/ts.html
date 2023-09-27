@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch and Timer</title>
+
+    <header>
+        <h1
+            style="background: linear-gradient(to right, #43614b, #1b1c1c); -webkit-background-clip: text; background-clip: text; color: transparent;">
+            STOPWATCH&TIMER</h1>
+    </header>
+    <hr>
+
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: 2rem;
+            background: linear-gradient(#614385, #516395);
+            color: aliceblue;
+
+        }
+
+        .container {
+            margin: 0 auto;
+            max-width: 600px;
+            padding: 20px;
+            border-style:dashed ;
+            border-radius: 10px;
+            border-width: 3px;
+            background-color: #0c0b0b
+        }
+
+        #startStopwatch{
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: large;
+            color: #0c0b0b;
+            cursor: pointer;
+            border-radius: 8px;
+            background-color: rgb(49, 142, 142);
+           
+        }
+        
+        #resetStopwatch{
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: large;
+            color: #0c0b0b;
+            cursor: pointer;
+            border-radius: 8px;
+            background-color: rgb(49, 142, 142);
+           
+        }
+        
+        #startTimer{
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: large;
+            color: #0c0b0b;
+            cursor: pointer;
+            border-radius: 8px;
+            background-color: rgb(49, 142, 142);
+           
+        }
+        #resetTimer{
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: large;
+            color: #0c0b0b;
+            cursor: pointer;
+            border-radius: 8px;
+            background-color: rgb(49, 142, 142);
+           
+        }
+
+        header {
+            text-align: center;
+            font-family: 'Times New Roman', Times, serif;
+            font-style: italic;
+            font-size: large;
+            background: linear-gradient(#93A5CF, #E4EfE9);
+            width: 100%;
+            height: 100%;
+
+        }
+
+    </style>
+</head>
+
+
+
+<body>
+    <div class="container">
+
+        <p>Stopwatch: <span id="stopwatch">00:00:00.000</span></p>
+        <p>Timer: <span id="timer">00:00:00.000</span></p>
+    </div>
+
+    <div class="buttons">
+    <button id="startStopwatch">Start</button>
+    <button id="resetStopwatch">Reset</button>
+    <button id="startTimer">Start Timer</button>
+    <button id="resetTimer">Reset Timer</button>
+</div>
+
+    <script>
+        let stopwatchInterval;
+        let timerInterval;
+        let stopwatchRunning = false;
+        let timerRunning = false;
+        let stopwatchMilliseconds = 0;
+        let timerMilliseconds = 0;
+
+        function formatTime(milliseconds) {
+            const hours = Math.floor(milliseconds / 3600000);
+            const minutes = Math.floor((milliseconds % 3600000) / 60000);
+            const seconds = Math.floor((milliseconds % 60000) / 1000);
+            const ms = milliseconds % 1000;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(ms).padStart(3, '0')}`;
+        }
+
+        document.getElementById("startStopwatch").addEventListener("click", function () {
+            if (stopwatchRunning) {
+                clearInterval(stopwatchInterval);
+                this.textContent = "Start";
+                stopwatchRunning = false;
+            } else {
+                stopwatchInterval = setInterval(function () {
+                    stopwatchMilliseconds += 10;
+                    document.getElementById("stopwatch").textContent = formatTime(stopwatchMilliseconds);
+                }, 10);
+                this.textContent = "Stop";
+                stopwatchRunning = true;
+            }
+        });
+
+        document.getElementById("resetStopwatch").addEventListener("click", function () {
+            clearInterval(stopwatchInterval);
+            document.getElementById("stopwatch").textContent = "00:00:00.000";
+            stopwatchMilliseconds = 0;
+            stopwatchRunning = false;
+            document.getElementById("startStopwatch").textContent = "Start";
+        });
+
+        document.getElementById("startTimer").addEventListener("click", function () {
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                this.textContent = "Start Timer";
+                timerRunning = false;
+            } else {
+                const inputTime = prompt("Enter time in seconds:");
+                if (inputTime !== null && !isNaN(inputTime) && inputTime >= 0) {
+                    timerMilliseconds = parseInt(inputTime) * 1000;
+                    document.getElementById("timer").textContent = formatTime(timerMilliseconds);
+                    timerInterval = setInterval(function () {
+                        timerMilliseconds -= 10;
+                        document.getElementById("timer").textContent = formatTime(timerMilliseconds);
+                        if (timerMilliseconds <= 0) {
+                            clearInterval(timerInterval);
+                            alert("Timer expired!");
+                            document.getElementById("startTimer").textContent = "Start Timer";
+                            timerRunning = false;
+                        }
+                    }, 10);
+                    this.textContent = "Stop Timer";
+                    timerRunning = true;
+                } else {
+                    alert("Invalid input. Please enter a valid number of seconds.");
+                }
+            }
+        });
+
+        document.getElementById("resetTimer").addEventListener("click", function () {
+            clearInterval(timerInterval);
+            document.getElementById("timer").textContent = "00:00:00.000";
+            timerMilliseconds = 0;
+            timerRunning = false;
+            document.getElementById("startTimer").textContent = "Start Timer";
+        });
+    </script>
+</body>
+
+</html>
